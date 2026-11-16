@@ -1,9 +1,16 @@
 <Window x:Class="CafeBar.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CafeBar.ViewModels"
+        xmlns:staff="clr-namespace:CafeBar.Modules.StaffManagement.UI"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Title="Кафе-бар" Height="768" Width="1366" MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen" Background="#F5F6F8">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <Style x:Key="NavigationButton" TargetType="Button">
             <Setter Property="Height" Value="44" />
             <Setter Property="Margin" Value="0,0,0,6" />
@@ -15,6 +22,10 @@
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Cursor" Value="Hand" />
         </Style>
+        <!-- Раздел показывает представление своего модуля -->
+        <DataTemplate DataType="{x:Type staff:EmployeesViewModel}">
+            <staff:EmployeesView />
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,6 +35,11 @@
         <Border Background="White" BorderBrush="#DADDE3" BorderThickness="0,0,1,0">
             <DockPanel Margin="18,24">
                 <TextBlock DockPanel.Dock="Top" Text="Кафе-бар" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,28" />
+                <StackPanel DockPanel.Dock="Bottom">
+                    <TextBlock Text="{Binding Session.Employee.FullName}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Session.Employee.Role}" FontSize="13" Foreground="#555E6B" Margin="0,2,0,10" />
+                    <Button Content="Выйти" Height="34" Click="SignOut_Click" />
+                </StackPanel>
                 <StackPanel>
                     <Button Style="{StaticResource NavigationButton}" Content="Заказы" Command="{Binding OpenSectionCommand}" CommandParameter="Заказы" />
                     <Button Style="{StaticResource NavigationButton}" Content="Меню" Command="{Binding OpenSectionCommand}" CommandParameter="Меню" />
@@ -35,10 +51,18 @@
                 </StackPanel>
             </DockPanel>
         </Border>
-        <StackPanel Grid.Column="1" Margin="36,32" HorizontalAlignment="Left">
+        <Grid Grid.Column="1" Margin="36,32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <TextBlock Text="{Binding SectionTitle}" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="Раздел в разработке" FontSize="17" Foreground="#555E6B" Margin="0,24,0,10" />
-            <TextBlock Text="{Binding SectionDescription}" FontSize="15" Foreground="#555E6B" TextWrapping="Wrap" MaxWidth="700" />
-        </StackPanel>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Left"
+                        Visibility="{Binding IsSectionInDevelopment, Converter={StaticResource BooleanToVisibility}}">
+                <TextBlock Text="Раздел в разработке" FontSize="17" Foreground="#555E6B" Margin="0,24,0,10" />
+                <TextBlock Text="{Binding SectionDescription}" FontSize="15" Foreground="#555E6B" TextWrapping="Wrap" MaxWidth="700" />
+            </StackPanel>
+            <ContentControl Grid.Row="1" Margin="0,24,0,0" Focusable="False" Content="{Binding SectionContent}" />
+        </Grid>
     </Grid>
 </Window>

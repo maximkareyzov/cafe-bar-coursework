@@ -10,4 +10,12 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = new MainViewModel();
     }
+
+    /// <summary>Нажата кнопка «Выйти»: окно нужно закрыть и снова показать окно входа.</summary>
+    public event EventHandler? SignOutRequested;
+
+    private void SignOut_Click(object sender, RoutedEventArgs e)
+    {
+        SignOutRequested?.Invoke(this, EventArgs.Empty);
+    }
 }

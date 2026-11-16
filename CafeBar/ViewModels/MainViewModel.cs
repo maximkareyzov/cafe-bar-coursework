@@ -1,36 +1,42 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using CafeBar.Commands;
+using CafeBar.Modules.StaffManagement.Logic;
+using CafeBar.Modules.StaffManagement.UI;
 
 namespace CafeBar.ViewModels;
 
-public class MainViewModel : INotifyPropertyChanged
+public class MainViewModel : ViewModelBase
 {
     private string _sectionTitle = "Заказы";
     private string _sectionDescription = "Здесь будет работа с заказами: создание, позиции и оплата.";
+    private object? _sectionContent;
 
     public string SectionTitle
     {
         get => _sectionTitle;
-        private set
-        {
-            if (_sectionTitle == value) return;
-            _sectionTitle = value;
-            OnPropertyChanged();
-        }
+        private set => Set(ref _sectionTitle, value);
     }
 
     public string SectionDescription
     {
         get => _sectionDescription;
+        private set => Set(ref _sectionDescription, value);
+    }
+
+    /// <summary>Модель представления открытого раздела; null, пока раздел в разработке.</summary>
+    public object? SectionContent
+    {
+        get => _sectionContent;
         private set
         {
-            if (_sectionDescription == value) return;
-            _sectionDescription = value;
-            OnPropertyChanged();
+            if (Set(ref _sectionContent, value)) OnPropertyChanged(nameof(IsSectionInDevelopment));
         }
     }
+
+    public bool IsSectionInDevelopment => _sectionContent == null;
+
+    /// <summary>Сеанс работы: в окне показывается вошедший сотрудник.</summary>
+    public Session Session => Session.Current;
 
     public ICommand OpenSectionCommand { get; }
 
@@ -50,7 +56,7 @@ public class MainViewModel : INotifyPropertyChanged
             "Склад" => "Здесь будут остатки, поступления и списания ингредиентов.",
             "Техкарты" => "Здесь будет состав блюд и расчёт себестоимости.",
             "Отчёты" => "Здесь будут отчёты о продажах и остатках.",
-            "Персонал" => "Здесь будут карточки сотрудников и учёт смен.",
+            "Персонал" => "Карточки сотрудников.",
             "Администрирование" => "Здесь будут настройки доступа и журнал действий.",
             _ => null
         };
@@ -58,12 +64,6 @@ public class MainViewModel : INotifyPropertyChanged
         if (description is null) return;
         SectionTitle = section;
         SectionDescription = description;
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        SectionContent = section == "Персонал" ? new EmployeesViewModel() : null;
     }
 }

@@ -23,7 +23,7 @@ public class MainViewModel : ViewModelBase
         private set => Set(ref _sectionDescription, value);
     }
 
-    /// <summary>Модель представления открытого раздела; null, пока раздел в разработке.</summary>
+    //Модель представления открытого раздела; null, пока раздел в разработке.
     public object? SectionContent
     {
         get => _sectionContent;
@@ -35,7 +35,7 @@ public class MainViewModel : ViewModelBase
 
     public bool IsSectionInDevelopment => _sectionContent == null;
 
-    /// <summary>Сеанс работы: в окне показывается вошедший сотрудник.</summary>
+    //Сеанс работы: в окне показывается вошедший сотрудник.
     public Session Session => Session.Current;
 
     public ICommand OpenSectionCommand { get; }
@@ -62,6 +62,7 @@ public class MainViewModel : ViewModelBase
         };
 
         if (description is null) return;
+        if (!AccessPolicy.CanOpen(Session.Current.Employee?.Role, section)) return;
         SectionTitle = section;
         SectionDescription = description;
         SectionContent = section == "Персонал" ? new EmployeesViewModel() : null;

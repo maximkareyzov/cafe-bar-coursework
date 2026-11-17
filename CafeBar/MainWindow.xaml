@@ -38,9 +38,11 @@
                 <StackPanel DockPanel.Dock="Bottom">
                     <TextBlock Text="{Binding Session.Employee.FullName}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" />
                     <TextBlock Text="{Binding Session.Employee.Role}" FontSize="13" Foreground="#555E6B" Margin="0,2,0,10" />
+					<TextBlock x:Name="ShiftText" FontSize="13" Foreground="#555E6B" TextWrapping="Wrap" Margin="0,0,0,6" />
+					<Button x:Name="ShiftButton" Height="34" Margin="0,0,0,6" Click="Shift_Click" />
                     <Button Content="Выйти" Height="34" Click="SignOut_Click" />
                 </StackPanel>
-                <StackPanel>
+                <StackPanel x:Name="NavigationPanel">
                     <Button Style="{StaticResource NavigationButton}" Content="Заказы" Command="{Binding OpenSectionCommand}" CommandParameter="Заказы" />
                     <Button Style="{StaticResource NavigationButton}" Content="Меню" Command="{Binding OpenSectionCommand}" CommandParameter="Меню" />
                     <Button Style="{StaticResource NavigationButton}" Content="Склад" Command="{Binding OpenSectionCommand}" CommandParameter="Склад" />

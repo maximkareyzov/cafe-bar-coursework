@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:CafeBar.ViewModels"
         xmlns:staff="clr-namespace:CafeBar.Modules.StaffManagement.UI"
+		xmlns:menu="clr-namespace:CafeBar.Modules.MenuManagement.UI"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Title="Кафе-бар" Height="768" Width="1366" MinHeight="600" MinWidth="1000"
@@ -26,6 +27,9 @@
         <DataTemplate DataType="{x:Type staff:EmployeesViewModel}">
             <staff:EmployeesView />
         </DataTemplate>
+		<DataTemplate DataType="{x:Type menu:MenuViewModel}">
+			<menu:MenuView />
+		</DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

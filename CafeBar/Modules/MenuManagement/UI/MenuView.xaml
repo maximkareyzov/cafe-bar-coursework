@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="CafeBar.Modules.MenuManagement.UI.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+	</UserControl.Resources>
+	<TabControl>
+		<TabItem Header="Позиции">
+			<DockPanel Margin="0,12,0,0">
+				<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12"
+                            Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibility}}">
+					<Button Content="Добавить" Width="110" Height="34" Click="AddItem_Click" />
+					<Button Content="Изменить" Width="110" Height="34" Margin="10,0,0,0" Click="EditItem_Click" IsEnabled="{Binding IsItemSelected}" />
+					<Button Content="Удалить" Width="110" Height="34" Margin="10,0,0,0" Click="DeleteItem_Click" IsEnabled="{Binding IsItemSelected}" />
+					<Button Content="Доступность" Width="120" Height="34" Margin="10,0,0,0" Click="ToggleAvailability_Click" IsEnabled="{Binding IsItemSelected}" />
+				</StackPanel>
+				<DataGrid ItemsSource="{Binding ItemList}" SelectedItem="{Binding SelectedItem}"
+                          AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          Background="White" BorderBrush="#DADDE3" HorizontalGridLinesBrush="#E6E8EC"
+                          RowHeight="32" FontSize="14" MouseDoubleClick="Items_MouseDoubleClick">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*" />
+						<DataGridTextColumn Header="Категория" Binding="{Binding Category.Name}" Width="170" />
+						<DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat=0.00}" Width="90" />
+						<DataGridTextColumn Header="Ед. изм." Binding="{Binding Unit}" Width="90" />
+						<DataGridCheckBoxColumn Header="Доступна" Binding="{Binding IsAvailable, Mode=OneWay}" Width="90" />
+					</DataGrid.Columns>
+				</DataGrid>
+			</DockPanel>
+		</TabItem>
+		<TabItem Header="Категории">
+			<DockPanel Margin="0,12,0,0">
+				<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12"
+                            Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibility}}">
+					<Button Content="Добавить" Width="110" Height="34" Click="AddCategory_Click" />
+					<Button Content="Изменить" Width="110" Height="34" Margin="10,0,0,0" Click="EditCategory_Click" IsEnabled="{Binding IsCategorySelected}" />
+					<Button Content="Удалить" Width="110" Height="34" Margin="10,0,0,0" Click="DeleteCategory_Click" IsEnabled="{Binding IsCategorySelected}" />
+				</StackPanel>
+				<DataGrid ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}"
+                          AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          Background="White" BorderBrush="#DADDE3" HorizontalGridLinesBrush="#E6E8EC"
+                          RowHeight="32" FontSize="14">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*" />
+					</DataGrid.Columns>
+				</DataGrid>
+			</DockPanel>
+		</TabItem>
+	</TabControl>
+</UserControl>

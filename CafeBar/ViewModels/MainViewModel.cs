@@ -2,6 +2,7 @@ using System.Windows.Input;
 using CafeBar.Commands;
 using CafeBar.Modules.StaffManagement.Logic;
 using CafeBar.Modules.StaffManagement.UI;
+using CafeBar.Modules.MenuManagement.UI;
 
 namespace CafeBar.ViewModels;
 
@@ -65,6 +66,11 @@ public class MainViewModel : ViewModelBase
         if (!AccessPolicy.CanOpen(Session.Current.Employee?.Role, section)) return;
         SectionTitle = section;
         SectionDescription = description;
-        SectionContent = section == "Персонал" ? new EmployeesViewModel() : null;
+        SectionContent = section switch
+        {
+            "Персонал" => new EmployeesViewModel(),
+            "Меню" => new MenuViewModel(),
+            _ => null
+        };
     }
 }

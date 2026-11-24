@@ -50,5 +50,28 @@
 				</DataGrid>
 			</DockPanel>
 		</TabItem>
+		<TabItem Header="Модификаторы">
+			<DockPanel Margin="0,12,0,0">
+				<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12"
+							Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibility}}">
+					<Button Content="Добавить" Width="110" Height="34" Click="AddModifier_Click" />
+					<Button Content="Изменить" Width="110" Height="34" Margin="10,0,0,0" Click="EditModifier_Click" IsEnabled="{Binding IsModifierSelected}" />
+					<Button Content="Удалить" Width="110" Height="34" Margin="10,0,0,0" Click="DeleteModifier_Click" IsEnabled="{Binding IsModifierSelected}" />
+				</StackPanel>
+				<DataGrid ItemsSource="{Binding ModifierList}" SelectedItem="{Binding SelectedModifier}"
+						  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+						  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+						  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+						  Background="White" BorderBrush="#DADDE3" HorizontalGridLinesBrush="#E6E8EC"
+						  RowHeight="32" FontSize="14">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Позиция меню" Binding="{Binding MenuItem.Name}" Width="*" />
+						<DataGridTextColumn Header="Группа" Binding="{Binding GroupName}" Width="170" />
+						<DataGridTextColumn Header="Значение" Binding="{Binding Name}" Width="170" />
+						<DataGridTextColumn Header="Надбавка" Binding="{Binding PriceExtra, StringFormat=0.00}" Width="100" />
+					</DataGrid.Columns>
+				</DataGrid>
+			</DockPanel>
+		</TabItem>
 	</TabControl>
 </UserControl>

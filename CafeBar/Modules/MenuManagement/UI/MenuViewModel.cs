@@ -52,6 +52,7 @@ public class MenuViewModel : ViewModelBase
         // запоминаем выделение, чтобы оно не слетало после обновления
         int? categoryId = SelectedCategory?.CategoryID;
         int? itemId = SelectedItem?.MenuItemID;
+        int? modifierId = SelectedModifier?.ModifierID;
 
         CategoryList.Clear();
         foreach (var category in _service.GetCategories()) CategoryList.Add(category);
@@ -60,6 +61,9 @@ public class MenuViewModel : ViewModelBase
 
         SelectedCategory = CategoryList.FirstOrDefault(c => c.CategoryID == categoryId);
         SelectedItem = ItemList.FirstOrDefault(m => m.MenuItemID == itemId);
+        ModifierList.Clear();
+        foreach (var modifier in _service.GetModifiers()) ModifierList.Add(modifier);
+        SelectedModifier = ModifierList.FirstOrDefault(m => m.ModifierID == modifierId);
     }
 
     public bool TryDeleteSelectedCategory(out string error)
@@ -87,5 +91,30 @@ public class MenuViewModel : ViewModelBase
         if (SelectedItem == null) return;
         _service.SetAvailable(SelectedItem.MenuItemID, !SelectedItem.IsAvailable);
         Reload();
+    }
+
+private Modifiers? _selectedModifier;
+
+    public ObservableCollection<Modifiers> ModifierList { get; } = new();
+
+    public Modifiers? SelectedModifier
+    {
+        get => _selectedModifier;
+        set
+        {
+            if (Set(ref _selectedModifier, value)) OnPropertyChanged(nameof(IsModifierSelected));
+        }
+    }
+
+    public bool IsModifierSelected => _selectedModifier != null;
+
+    public bool TryDeleteSelectedModifier(out string error)
+    {
+        error = string.Empty;
+        if (SelectedModifier == null) return true;
+
+        bool deleted = _service.TryDeleteModifier(SelectedModifier.ModifierID, out error);
+        if (deleted) Reload();
+        return deleted;
     }
 }

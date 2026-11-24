@@ -174,6 +174,93 @@ public class MenuService
 
         return true;
     }
+    public List<Modifiers> GetModifiers()
+    {
+        using var db = AppDatabase.CreateContext();
+        return db.Modifiers.AsNoTracking().Include(m => m.MenuItem).ToList()
+            .OrderBy(m => m.MenuItem.Name, StringComparer.CurrentCulture)
+            .ThenBy(m => m.GroupName, StringComparer.CurrentCulture)
+            .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+            .ToList();
+    }
+
+    public bool TrySaveModifier(int? id, int menuItemId, string groupName, string name, decimal priceExtra, out string error)
+    {
+        groupName = groupName.Trim();
+        name = name.Trim();
+        error = string.Empty;
+
+        if (groupName.Length == 0) error = "Укажите группу, например «Сироп» или «Размер».";
+        else if (name.Length == 0) error = "Укажите значение модификатора.";
+        else if (priceExtra < 0) error = "Надбавка не может быть отрицательной.";
+        if (error.Length > 0) return false;
+
+        using var db = AppDatabase.CreateContext();
+        if (!db.MenuItems.Any(m => m.MenuItemID == menuItemId))
+        {
+            error = "Выбранная позиция меню не найдена.";
+            return false;
+        }
+
+        // одно и то же значение в группе позиции не повторяем
+        bool taken = db.Modifiers.AsNoTracking().ToList()
+            .Any(m => m.ModifierID != id && m.MenuItemID == menuItemId
+                && SameName(m.GroupName, groupName) && SameName(m.Name, name));
+        if (taken)
+        {
+            error = $"Значение «{name}» в группе «{groupName}» уже есть.";
+            return false;
+        }
+
+        if (id == null)
+        {
+            db.Modifiers.Add(new Modifiers
+            {
+                MenuItemID = menuItemId,
+                GroupName = groupName,
+                Name = name,
+                PriceExtra = priceExtra
+            });
+        }
+        else
+        {
+            var modifier = db.Modifiers.SingleOrDefault(m => m.ModifierID == id);
+            if (modifier == null)
+            {
+                error = "Модификатор не найден: возможно, его уже удалили.";
+                return false;
+            }
+            modifier.MenuItemID = menuItemId;
+            modifier.GroupName = groupName;
+            modifier.Name = name;
+            modifier.PriceExtra = priceExtra;
+        }
+
+        db.SaveChanges();
+        return true;
+    }
+
+    public bool TryDeleteModifier(int id, out string error)
+    {
+        error = string.Empty;
+        using var db = AppDatabase.CreateContext();
+        var modifier = db.Modifiers.SingleOrDefault(m => m.ModifierID == id);
+        if (modifier == null) return true;
+
+        db.Modifiers.Remove(modifier);
+        try
+        {
+            db.SaveChanges();
+        }
+        catch (DbUpdateException)
+        {
+            // модификатор уже использован в заказе
+            error = "Модификатор нельзя удалить: он есть в заказах.";
+            return false;
+        }
+
+        return true;
+    }
 
     private static bool SameName(string first, string second)
     {

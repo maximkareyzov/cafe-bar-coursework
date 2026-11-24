@@ -91,4 +91,35 @@ public partial class MenuView : UserControl
         var window = new CategoryWindow(category) { Owner = Window.GetWindow(this), ShowInTaskbar = false };
         if (window.ShowDialog() == true) ViewModel.Reload();
     }
+
+private void AddModifier_Click(object sender, RoutedEventArgs e)
+    {
+        OpenModifier(null);
+    }
+
+    private void EditModifier_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedModifier != null) OpenModifier(ViewModel.SelectedModifier);
+    }
+
+    private void DeleteModifier_Click(object sender, RoutedEventArgs e)
+    {
+        var modifier = ViewModel.SelectedModifier;
+        if (modifier == null) return;
+
+        var answer = MessageBox.Show($"Удалить модификатор «{modifier.Name}»?", "Меню",
+            MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (answer != MessageBoxResult.Yes) return;
+
+        if (!ViewModel.TryDeleteSelectedModifier(out string error))
+        {
+            MessageBox.Show(error, "Меню", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void OpenModifier(Modifiers? modifier)
+    {
+        var window = new ModifierWindow(modifier) { Owner = Window.GetWindow(this), ShowInTaskbar = false };
+        if (window.ShowDialog() == true) ViewModel.Reload();
+    }
 }

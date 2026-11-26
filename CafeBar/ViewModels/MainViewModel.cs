@@ -3,6 +3,7 @@ using CafeBar.Commands;
 using CafeBar.Modules.StaffManagement.Logic;
 using CafeBar.Modules.StaffManagement.UI;
 using CafeBar.Modules.MenuManagement.UI;
+using CafeBar.Modules.Inventory.UI;
 
 namespace CafeBar.ViewModels;
 
@@ -59,6 +60,7 @@ public class MainViewModel : ViewModelBase
             "Отчёты" => "Здесь будут отчёты о продажах и остатках.",
             "Персонал" => "Карточки сотрудников.",
             "Администрирование" => "Здесь будут настройки доступа и журнал действий.",
+
             _ => null
         };
 
@@ -70,6 +72,7 @@ public class MainViewModel : ViewModelBase
         {
             "Персонал" => new EmployeesViewModel(),
             "Меню" => new MenuViewModel(),
+            "Склад" => new IngredientsViewModel(),
             _ => null
         };
     }

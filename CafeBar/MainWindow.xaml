@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:inv="clr-namespace:CafeBar.Modules.Inventory.UI"
         xmlns:vm="clr-namespace:CafeBar.ViewModels"
         xmlns:staff="clr-namespace:CafeBar.Modules.StaffManagement.UI"
 		xmlns:menu="clr-namespace:CafeBar.Modules.MenuManagement.UI"
@@ -29,6 +30,9 @@
         </DataTemplate>
 		<DataTemplate DataType="{x:Type menu:MenuViewModel}">
 			<menu:MenuView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type inv:IngredientsViewModel}">
+			<inv:IngredientsView />
 		</DataTemplate>
     </Window.Resources>
     <Grid>

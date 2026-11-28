@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="CafeBar.Modules.Inventory.UI.SuppliesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<StackPanel Orientation="Horizontal" Margin="0,0,0,12"
+                    Visibility="{Binding CanEdit, Converter={StaticResource BooleanToVisibility}}">
+			<Button Content="Новое поступление" Width="170" Height="34" Click="Add_Click" />
+		</StackPanel>
+		<DataGrid Grid.Row="1" ItemsSource="{Binding Documents}" SelectedItem="{Binding Selected}"
+                  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  Background="White" BorderBrush="#DADDE3" HorizontalGridLinesBrush="#E6E8EC"
+                  RowHeight="32" FontSize="14">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Дата" Binding="{Binding SupplyDate, StringFormat=dd.MM.yyyy}" Width="110" />
+				<DataGridTextColumn Header="Поставщик" Binding="{Binding SupplierName}" Width="*" />
+				<DataGridTextColumn Header="Принял" Binding="{Binding EmployeeName}" Width="200" />
+				<DataGridTextColumn Header="Позиций" Binding="{Binding ItemCount}" Width="90" />
+				<DataGridTextColumn Header="Сумма" Binding="{Binding Total, StringFormat=0.00}" Width="110" />
+			</DataGrid.Columns>
+		</DataGrid>
+		<TextBlock Grid.Row="2" Text="Позиции выбранного документа" FontWeight="SemiBold" Margin="0,16,0,8" />
+		<DataGrid Grid.Row="3" ItemsSource="{Binding Lines}"
+                  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  Background="White" BorderBrush="#DADDE3" HorizontalGridLinesBrush="#E6E8EC"
+                  RowHeight="32" FontSize="14">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Ингредиент" Binding="{Binding IngredientName}" Width="*" />
+				<DataGridTextColumn Header="Ед." Binding="{Binding Unit}" Width="70" />
+				<DataGridTextColumn Header="Количество" Binding="{Binding Quantity, StringFormat=0.###}" Width="110" />
+				<DataGridTextColumn Header="Цена за ед." Binding="{Binding UnitPrice, StringFormat=0.00}" Width="110" />
+				<DataGridTextColumn Header="Срок годности" Binding="{Binding ExpirationDate, StringFormat=dd.MM.yyyy}" Width="130" />
+				<DataGridTextColumn Header="Сумма" Binding="{Binding Sum, StringFormat=0.00}" Width="110" />
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+</UserControl>

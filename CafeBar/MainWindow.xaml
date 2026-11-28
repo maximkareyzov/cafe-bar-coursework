@@ -31,8 +31,18 @@
 		<DataTemplate DataType="{x:Type menu:MenuViewModel}">
 			<menu:MenuView />
 		</DataTemplate>
-		<DataTemplate DataType="{x:Type inv:IngredientsViewModel}">
-			<inv:IngredientsView />
+		<DataTemplate DataType="{x:Type inv:InventoryViewModel}">
+			<TabControl>
+				<TabItem Header="Ингредиенты">
+					<inv:IngredientsView Margin="0,12,0,0" DataContext="{Binding Ingredients}" />
+				</TabItem>
+				<TabItem Header="Поставщики">
+					<inv:SuppliersView Margin="0,12,0,0" DataContext="{Binding Suppliers}" />
+				</TabItem>
+				<TabItem Header="Поступления">
+					<inv:SuppliesView Margin="0,12,0,0" DataContext="{Binding Supplies}" />
+				</TabItem>
+			</TabControl>
 		</DataTemplate>
     </Window.Resources>
     <Grid>

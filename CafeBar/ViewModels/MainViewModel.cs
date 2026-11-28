@@ -72,7 +72,7 @@ public class MainViewModel : ViewModelBase
         {
             "Персонал" => new EmployeesViewModel(),
             "Меню" => new MenuViewModel(),
-            "Склад" => new IngredientsViewModel(),
+            "Склад" => new InventoryViewModel(),
             _ => null
         };
     }
